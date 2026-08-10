@@ -16,10 +16,15 @@ jobs:
       run: echo "sdk.dir=$ANDROID_HOME" > local.properties
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew assembleDebug
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
+    - name: Sign APK
+      run: |
+        keytool -genkey -v -keystore key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key -dname "CN=test" -storepass password
+        SIGNER=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)/apksigner
+        find app_pojavlauncher/build/outputs/apk/ -name "*.apk" -exec $SIGNER sign --ks key.jks --ks-pass pass:password {} \;
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug
+        name: app-release
         path: app_pojavlauncher/build/outputs/apk/**/*.apk
