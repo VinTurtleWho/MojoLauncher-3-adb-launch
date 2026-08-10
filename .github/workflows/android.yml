@@ -22,4 +22,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: app_pojavlauncher/build/outputs/apk/debug/
+        path: app_pojavlauncher/build/outputs/apk/**/*.apk
